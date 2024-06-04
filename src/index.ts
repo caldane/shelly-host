@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mqtt from "mqtt"; // import namespace "mqtt"
-let client = mqtt.connect("mqtt://192.168.86.71:1883"); // create a client
+let client = mqtt.connect(process.env.MQTT_URL as string); // create a client
 
 dotenv.config();
 
