@@ -1,7 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import mqtt from "mqtt"; // import namespace "mqtt"
-let client = mqtt.connect(process.env.MQTT_URL as string); // create a client
+import mqtt from "mqtt";
+
+let client = mqtt.connect(process.env.MQTT_URL as string); 
 
 dotenv.config();
 
@@ -21,6 +22,10 @@ app.get("/channel/:channel/message/:message/:clientName", (req: Request, res: Re
   client.publish(mqttChannel, req.params.message);
   console.log(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${mqttChannel}"`);
   res.sendStatus(204);
+});
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("<h1>MQTT Server</h1><p>Use /channel/:channel/message/:message/:clientName to send a message to a channel</p>");
 });
 
 app.listen(port, () => {
