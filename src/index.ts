@@ -2,6 +2,9 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mqtt from "mqtt";
 
+import expressWinston from "express-winston";
+import { logger } from "./logger";
+
 let client = mqtt.connect(process.env.MQTT_URL as string); 
 
 dotenv.config();
@@ -13,6 +16,12 @@ const channelDictionary = {
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
+
+app.use(expressWinston.logger({
+  winstonInstance: logger,
+  statusLevels: true
+}))
+
 app.get("/channel/:channel/message/:message/:clientName", (req: Request, res: Response) => {
   const mqttChannel: string = channelDictionary[req.params.channel as keyof typeof channelDictionary];
   if (!mqttChannel) {
@@ -20,7 +29,7 @@ app.get("/channel/:channel/message/:message/:clientName", (req: Request, res: Re
     return;
   }
   client.publish(mqttChannel, req.params.message);
-  console.log(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${mqttChannel}"`);
+  logger.info(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${mqttChannel}"`);
   res.sendStatus(204);
 });
 
