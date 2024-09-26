@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mqtt from "mqtt";
+import {channelDictionary} from "./utils/channel.helper"
 
 import expressWinston from "express-winston";
 import { logger } from "./logger";
@@ -9,9 +10,7 @@ let client = mqtt.connect(process.env.MQTT_URL as string);
 
 dotenv.config();
 
-const channelDictionary = {
-  "downstairs": "shellyplus1-bighouse/command/switch:0",
-} as const;
+
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
