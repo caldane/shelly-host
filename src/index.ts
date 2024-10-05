@@ -10,11 +10,8 @@ let client = mqtt.connect(process.env.MQTT_URL as string);
 
 dotenv.config();
 
-
-
 const app: Express = express();
 const port = process.env.PORT || 3000;
-
 
 app.use(expressWinston.logger({
   winstonInstance: logger,
@@ -27,8 +24,9 @@ app.get("/channel/:channel/message/:message/:clientName", (req: Request, res: Re
     res.status(404).send("Channel not found");
     return;
   }
+  logger.info("Publish mqtt message: ", mqttChannel, req.params.message);
   client.publish(mqttChannel, req.params.message);
-  logger.info(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${mqttChannel}"`);
+  logger.info(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${req.params.channel}"`);
   res.sendStatus(204);
 });
 
