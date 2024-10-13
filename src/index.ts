@@ -7,7 +7,7 @@ import expressWinston from "express-winston";
 import { logger } from "./logger";
 
 let client = mqtt.connect(process.env.MQTT_URL as string); 
-console.log(`[server]: Server is running at ${process.env.MQTT_URL}}`);
+console.log(`[server]: Server is running at ${process.env.MQTT_URL}`);
 
 
 dotenv.config();
