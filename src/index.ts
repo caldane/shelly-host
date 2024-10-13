@@ -7,7 +7,7 @@ import expressWinston from "express-winston";
 import { logger } from "./logger";
 
 let client = mqtt.connect(process.env.MQTT_URL as string); 
-console.log(`[server]: Server is running at ${process.env.MQTT_URL}`);
+console.log(`[server]: MQTT Server is running at ${process.env.MQTT_URL}`);
 
 
 dotenv.config();
@@ -37,5 +37,5 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`[server]: Web Server is running at http://localhost:${port}`);
 });
