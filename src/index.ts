@@ -7,6 +7,8 @@ import expressWinston from "express-winston";
 import { logger } from "./logger";
 
 let client = mqtt.connect(process.env.MQTT_URL as string); 
+console.log(`[server]: Server is running at ${process.env.MQTT_URL}}`);
+
 
 dotenv.config();
 
@@ -24,8 +26,8 @@ app.get("/channel/:channel/message/:message/:clientName", (req: Request, res: Re
     res.status(404).send("Channel not found");
     return;
   }
-  logger.info(`[server]: Publish mqtt message: ${mqttChannel} \n    ${req.params.message}`);
-  client.publish(mqttChannel, req.params.message);
+  console.log(`[server]: Publish mqtt message: ${mqttChannel} \n    ${req.params.message}`);
+  logger.info(client.publish(mqttChannel, req.params.message));
   logger.info(`[server]: Client ${req.params.clientName} published message "${req.params.message}" to channel "${req.params.channel}"`);
   res.sendStatus(204);
 });
