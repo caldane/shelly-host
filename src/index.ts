@@ -39,5 +39,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
+<<<<<<< HEAD
     console.log(`[server]: Web Server is running at http://localhost:${port}`);
 });
+=======
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+});
+
+//http://mqtt.lan/channel/downstairs/message/toggle/stairs
+>>>>>>> 8b88171 (Add more channels)
