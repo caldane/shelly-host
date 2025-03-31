@@ -1,0 +1,13 @@
+{
+    "discover": {
+        "dhcp": {
+            "start": 40,
+            "end": 200
+        },
+        "cloud-access": {
+            "url": "https://shelly-89-eu.shelly.cloud",
+            "list-path":"/interface/device/list",
+            "room-list-path": "/interface/room/list"
+        }
+    }
+}
