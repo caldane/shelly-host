@@ -22,8 +22,8 @@ export interface Rooms {
 
 export interface Room {
   name: string
-  description: string
-  switches: Switch[]
+  description?: string
+  switches?: Switch[]
 }
 
 export interface Switch {

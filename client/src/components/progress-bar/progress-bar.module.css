@@ -1,0 +1,15 @@
+section.progress-bar {
+    width: 100%;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    height: 16px;
+    margin-bottom: 16px;
+    
+
+    div {
+        background-color: #3b82f6; 
+        height: 16px; 
+        border-radius: 9999px; 
+        transition: all 0.2s ease-in-out; 
+    }
+}

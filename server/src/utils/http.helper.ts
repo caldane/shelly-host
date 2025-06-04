@@ -46,7 +46,7 @@ async function makeRequest<T>(
 
     req.on('error', (err) => {
       if (retries > 0) {
-        console.log(`Retrying due to error: ${err.message}. Attempts left: ${retries - 1}`);
+        //console.log(`Retrying due to error: ${err.message}. Attempts left: ${retries - 1}`);
         setTimeout(async () => {
           try {
             const response = await makeRequest<T>(options, data, retries - 1, delay);

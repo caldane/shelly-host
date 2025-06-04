@@ -1,6 +1,6 @@
 import { logger } from "../logger";
 import sites from "../assets/json/site.json"
-import { Room, Site } from "../models/sites.interface";
+import { Room, Site } from "../../../common/models/sites.interface";
 import { mqtt } from "./mqtt.helper";
 
 export const channelDictionary = {
@@ -50,14 +50,14 @@ export const sendMessageToDevices = (siteName: string, roomName: string, deviceN
   let devices = room.switches;
   if (deviceNames !== undefined) {
     if (Array.isArray(deviceNames)) {
-      devices = room.switches.filter((device) => deviceNames.some((name) => device.name.localeCompare(name, undefined, { sensitivity: 'base' }) === 0));
-      if (devices.length === 0) {
+      devices = room?.switches?.filter((device) => deviceNames.some((name) => device.name.localeCompare(name, undefined, { sensitivity: 'base' }) === 0));
+      if (!devices || devices.length === 0) {
         throw new Error(`Devices [${deviceNames.join(", ")}] not found in room [${room.name}]`);
       }
     } 
   }
 
-  devices.forEach((device) => {
+  devices?.forEach((device) => {
     const mqttChannel = `${site.name}/${room.name}/${device.name}/command/switch:${device.channel}`;
     logger.info(`[server]: Publish mqtt message: ${mqttChannel} \n    ${message}`);
     mqtt.publish(clientName, mqttChannel, message);

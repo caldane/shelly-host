@@ -1,0 +1,236 @@
+{
+    "isok": true,
+    "data": {
+        "rooms": {
+            "1": {
+                "name": "Carport",
+                "image": "assets/user_images/543d2ef676401b0bd5cb94beb0d0f6bf/room/thumb_1704671803659b3a3bc6c05.jpeg",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 0,
+                "id": 1,
+                "modified": 1704671806
+            },
+            "24": {
+                "name": "Guest Bathroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 21,
+                "id": 24,
+                "modified": 1727068745
+            },
+            "9": {
+                "name": "Dining Room",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 8,
+                "id": 9,
+                "modified": 1727065548
+            },
+            "4": {
+                "name": "Master Bedroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 3,
+                "id": 4,
+                "modified": 1727044000
+            },
+            "14": {
+                "name": "Cat Bathroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 13,
+                "id": 14,
+                "modified": 1727065908
+            },
+            "16": {
+                "name": "Garage",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 15,
+                "id": 16,
+                "modified": 1727066324
+            },
+            "20": {
+                "name": "Attic",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 18,
+                "id": 20,
+                "modified": 1727066911
+            },
+            "2": {
+                "name": "Living Room",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 1,
+                "id": 2,
+                "modified": 1727043503
+            },
+            "12": {
+                "name": "Stairs",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 11,
+                "id": 12,
+                "modified": 1727065791
+            },
+            "8": {
+                "name": "Kitchen",
+                "image": "images/room_def/kitchen_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 7,
+                "id": 8,
+                "modified": 1727065493
+            },
+            "26": {
+                "name": "Master Closet",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 23,
+                "id": 26,
+                "modified": 1727324567
+            },
+            "21": {
+                "name": "Podcast Bathroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 19,
+                "id": 21,
+                "modified": 1727067078
+            },
+            "6": {
+                "name": "Unknown",
+                "image": "images/room_def/kitchen_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 5,
+                "id": 6,
+                "modified": 1727045292
+            },
+            "25": {
+                "name": "Master Bathroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 22,
+                "id": 25,
+                "modified": 1727324032
+            },
+            "10": {
+                "name": "Mudroom",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 9,
+                "id": 10,
+                "modified": 1727065615
+            },
+            "13": {
+                "name": "Guest Bedroom",
+                "image": "images/room_def/living_room_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 12,
+                "id": 13,
+                "modified": 1727065852
+            },
+            "11": {
+                "name": "Caleb Office",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 10,
+                "id": 11,
+                "modified": 1727065678
+            },
+            "23": {
+                "name": "Butler Pantry",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 20,
+                "id": 23,
+                "modified": 1727067365
+            },
+            "5": {
+                "name": "Laundry Room",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 4,
+                "id": 5,
+                "modified": 1727044070
+            },
+            "3": {
+                "name": "Entry",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 2,
+                "id": 3,
+                "modified": 1727043703
+            },
+            "19": {
+                "name": "Podcast Studio",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 17,
+                "id": 19,
+                "modified": 1727066843
+            },
+            "7": {
+                "name": "Outside",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 6,
+                "id": 7,
+                "modified": 1727065339
+            },
+            "18": {
+                "name": "Chelsea Office",
+                "image": "images/room_def/bedroom_img_def_m.jpg",
+                "backgroundColor": "",
+                "main_sensor": false,
+                "overview_style": false,
+                "position": 16,
+                "id": 18,
+                "modified": 1727066501
+            }
+        }
+    }
+}

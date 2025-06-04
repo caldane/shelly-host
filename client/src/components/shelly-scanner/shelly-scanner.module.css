@@ -1,0 +1,12 @@
+section.shelly-scanner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  article {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+}

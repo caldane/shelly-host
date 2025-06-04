@@ -2,7 +2,7 @@
     "discover": {
         "dhcp": {
             "start": 40,
-            "end": 200
+            "end": 220
         },
         "cloud-access": {
             "url": "https://shelly-89-eu.shelly.cloud",
