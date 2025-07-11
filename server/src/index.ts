@@ -25,6 +25,10 @@ app.get("/", (_: Request, res: Response) => {
     res.send("<h1>MQTT Server</h1><p>Use /channel/:channel/message/:message/:clientName to send a message to a channel</p>");
 });
 
+app.get("/health", (_: Request, res: Response) => {
+    res.status(200).send("Healthy");
+});
+
 app.listen(port, () => {
     logger.info(`[server]: Web Server is running at http://localhost:${port}`);
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./shelly-scanner.module.css";
 import ProgressBar from "../progress-bar/ProgressBar";
 import { BACKEND_URL } from "../../constants/env";

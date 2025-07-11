@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "cp -r ./models /app/data",
+    "multi-start": "cp -r ./models ./types ./schemas /app/data || true"
+  }
+}

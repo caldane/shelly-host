@@ -1,0 +1,121 @@
+services:
+  mqtt:
+    image: registry.caldane.net/shelly-host-mqtt:latest
+    container_name: mqtt
+    ports:
+      - "1884:1883"
+      - "9002:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_config:/mosquitto/config
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t healthcheck -m ok || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: shelly-user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: shelly_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      loki:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  common:
+    image: registry.caldane.net/shelly-host-common:latest    
+    container_name: shelly-common
+    volumes:
+      - shared_common:/app/data
+    restart: "no"
+
+  server:
+    image: registry.caldane.net/shelly-host-server:latest
+    container_name: shelly-server
+    environment:
+      PORT: "$PORT"
+      MQTT_URL: "$MQTT_URL"    
+      CLIENT_URL: "$CLIENT_URL"
+      SHELLY_CLOUD_AUTH_KEY: "$SHELLY_CLOUD_AUTH_KEY"
+      VHOST_PREFIX: "$VHOST_PREFIX"
+    volumes:
+      - ./server:/app/server
+      - shared_common:/app/common:ro
+    depends_on:
+      common:
+        condition: service_completed_successfully
+      mqtt:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "4500:4500"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4500/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  client:
+    image: registry.caldane.net/shelly-host-client:latest
+    container_name: shelly-client
+    environment:
+      VITE_APP_BACKEND: "$VITE_APP_BACKEND"
+      VITE_APP_NAME: "$VITE_APP_NAME"
+    depends_on:
+      server:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "4501:4501"
+
+volumes:
+  mosquitto_data:
+  mosquitto_config:
+  postgres_data:
+  loki_data:
+  shared_common:
