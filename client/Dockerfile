@@ -1,5 +1,5 @@
 # === Build stage ===
-FROM node:24-slim AS builder
+FROM node:24 AS builder
 
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
@@ -14,7 +14,7 @@ COPY common ./common
 RUN cd client && npm rebuild rollup && npm run build
 
 # === Runtime stage ===
-FROM node:24-slim
+FROM node:24
 
 RUN npm install -g serve
 WORKDIR /app

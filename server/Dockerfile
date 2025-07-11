@@ -1,5 +1,4 @@
-FROM node:24-alpine3.21
-
+FROM node:24
 # Update Alpine packages to reduce vulnerabilities
 RUN apk update && apk upgrade --no-cache
 RUN apk add --no-cache curl
