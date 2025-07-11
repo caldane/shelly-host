@@ -8,6 +8,7 @@ services:
     volumes:
       - mosquitto_data:/mosquitto/data
       - mosquitto_config:/mosquitto/config
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "mosquitto_pub -h localhost -t healthcheck -m ok || exit 1"]
       interval: 10s
@@ -25,11 +26,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U shelly-user -d shelly_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+
 
   loki:
     image: grafana/loki:2.9.2
@@ -39,6 +42,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
       interval: 10s
@@ -52,6 +56,7 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
     depends_on:
       loki:
         condition: service_healthy
