@@ -2,7 +2,7 @@ import "dotenv/config";
 import express, { Express, Request, Response } from "express";
 
 import expressWinston from "express-winston";
-import { logger } from "./logger";
+import { logEnv, logger } from "./logger";
 
 import { init } from "./utils/server.helper";
 
@@ -22,6 +22,7 @@ app.use(
 );
 
 app.get("/", (_: Request, res: Response) => {
+    logEnv();
     res.send("<h1>MQTT Server</h1><p>Use /channel/:channel/message/:message/:clientName to send a message to a channel</p>");
 });
 

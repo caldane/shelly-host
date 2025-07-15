@@ -1,7 +1,7 @@
 FROM node:24
-# Update Alpine packages to reduce vulnerabilities
-RUN apk update && apk upgrade --no-cache
-RUN apk add --no-cache curl
+# Update Debian packages to reduce vulnerabilities
+RUN apt update && apt upgrade -y
+RUN apt install -y curl
 
 EXPOSE 4500
 
@@ -13,6 +13,6 @@ COPY package*.json ./
 
 RUN npm i
 
-COPY . ./
+COPY . .
 
 CMD ["npm", "run", "dev"]

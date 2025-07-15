@@ -6,7 +6,6 @@ import { BACKEND_URL } from "../../constants/env";
 import style from "./shelly-entity.module.css";
 
 const TOGGLE_MESSAGE = { src: "buffington.action", method: "Switch.Toggle", params: { id: 0 } };
-const SHELLY_HOST_URL = "http://192.168.1.200:4500";
 
 const copy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -81,7 +80,7 @@ const ShellyEntity = ({ device, mode }: { device: IDevice; mode: string }) => {
     };
 
     return (
-        <section className={style["shelly-entity"]} data-mqtt={deviceEntity.mqtt.enable ? "" : undefined} data-ip={deviceEntity.ip}>
+        <section className={style["shelly-entity"]} data-mqtt={deviceEntity.mqtt?.enable ? "" : undefined} data-ip={deviceEntity.ip}>
             <h3 onClick={() => window.open(`http://${deviceEntity.ip}`, "_blank")}>{deviceEntity.name}</h3>
             <p>
                 <b>IP Address:</b> {deviceEntity.ip}
@@ -96,12 +95,18 @@ const ShellyEntity = ({ device, mode }: { device: IDevice; mode: string }) => {
                 <b>State:</b> {deviceEntity?.switchStatus?.output ? "On" : "Off"}
             </p>
             <p>
+                <b>WiFi:</b> {deviceEntity.device?.ssid || "N/A"}
+            </p>
+            <p>
+                <b>MQTT Server:</b> {deviceEntity.mqtt?.server || "N/A"}
+            </p>
+            <p>
                 {(mode == "debug" || mode == "dev") && (
                     <button onClick={() => handleMqtt(deviceEntity)}>
-                        <b>MQTT:</b> {deviceEntity.mqtt.enable.toString()}
+                        <b>MQTT:</b> {deviceEntity.mqtt?.enable.toString()}
                     </button>
                 )}
-                {deviceEntity.mqtt.enable && (
+                {deviceEntity.mqtt?.enable && (
                     <button onClick={() => toggleMqtt(deviceEntity)}>
                         <FontAwesomeIcon icon={faPowerOff} data-status={deviceEntity.switchStatus.output} />
                     </button>
@@ -109,8 +114,8 @@ const ShellyEntity = ({ device, mode }: { device: IDevice; mode: string }) => {
             </p>
             {mode == "debug" && (
                 <p className={style.tools}>
-                    {deviceEntity.mqtt.enable && (
-                        <button onClick={() => copy(`${deviceEntity.mqtt.topic_prefix}/rpc`, "MQTT Topic")} title="Copy MQTT Topic Prefix">
+                    {deviceEntity.mqtt?.enable && (
+                        <button onClick={() => copy(`${deviceEntity.mqtt?.topic_prefix}/rpc`, "MQTT Topic")} title="Copy MQTT Topic Prefix">
                             <FontAwesomeIcon icon={faMessage} />
                         </button>
                     )}
@@ -119,7 +124,7 @@ const ShellyEntity = ({ device, mode }: { device: IDevice; mode: string }) => {
                             title="Copy Webhook Url"
                             onClick={() =>
                                 copy(
-                                    `${SHELLY_HOST_URL}/api/message/srd/buffington/${deviceEntity?.room?.id}/${deviceName}/switch/message/toggle/shelly`,
+                                    `${BACKEND_URL}/api/message/srd/buffington/${deviceEntity?.room?.id}/${deviceName}/switch/message/toggle/shelly`,
                                     "Webhook Url"
                                 )
                             }

@@ -1,11 +1,11 @@
 export interface Webhooks {
     id: string
     src: string
-    result: Result
+    result: HookResult
     ip?: string
   }
   
-  export interface Result {
+  export interface HookResult {
     hooks: Hook[]
     rev: number
   }

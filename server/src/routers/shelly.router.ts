@@ -5,7 +5,7 @@ import roomList from "../assets/json/room-list.json";
 import config from "../assets/json/config.json";
 import { logger } from "../logger";
 import os from "os";
-import { composeShellyDevice, shellyActivateMqtt, shellyGetMqttSettings, shellyReboot, shellyWebhookList } from "../utils/discovery.helper";
+import { composeShellyDevice, shellyActivateMqtt, shellyActivateWebhook, shellyGetMqttSettings, shellyReboot, shellyWebhookList } from "../utils/discovery.helper";
 import { MqttResponse } from "../../../common/models/mqtt.interface";
 import { DeviceList, IDevice } from "../../../common/models/device.interface";
 import { mqttAddListener, mqtt as mqttClient } from "../utils/mqtt.helper";
@@ -51,16 +51,17 @@ shellyRouter.get("/listen", async (_: Request, res: Response) => {
     });
 });
 
-shellyRouter.get("/discover", async (_: Request, res: Response) => {
+shellyRouter.get("/discover", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
+    const ipAddress: string | null = req.query.ip?.toString() || localIpAddress;
 
-    if (!localIpAddress) {
+    if (!ipAddress) {
         res.status(404).send("Cannot discover devices when not on a network.");
         return;
     }
-    const [net1, net2, net3] = localIpAddress.split(".");
+    const [net1, net2, net3] = ipAddress.split(".");
     // const shellyRooms = await shellyCloudRooms();
     // await new Promise((resolve) => setTimeout(resolve, 5000)); // Adding a delay to ensure the cloud rooms are fetched before discovering devices
     // const shellyDevices = await shellyCloudDevices();
@@ -121,18 +122,44 @@ shellyRouter.get("/discover", async (_: Request, res: Response) => {
 });
 
 shellyRouter.post("/:ip/mqtt", async (req: Request, res: Response) => {
+    logger.info(`[server]: Activating MQTT for device with IP: ${req.params.ip}`);
     const ip = req.params.ip;
+    const device: IDevice = req.body.device;
 
-    const mqtt = await shellyActivateMqtt(ip, req.body.device);
+    const mqtt = await shellyActivateMqtt(ip, device);
+    logger.info(`[server]: MQTT activation response for ${ip}: ${JSON.stringify(mqtt)}`);
     if (mqtt) {
         await shellyReboot(ip);
-        const device = Object.values(deviceList.data.devices).find((device) => device.ip === ip);
-        if (device) {
-            mqttClient.status(mqtt.device);
-        }
+
+        mqttClient.status(mqtt.device);
     } else {
         res.status(404).send("Shelly device not found");
     }
 
     res.send(mqtt);
+});
+
+shellyRouter.post("/:ip/webhook", async (req: Request, res: Response) => {
+    logger.info(`[server]: Activating Webhook for device with IP: ${req.params.ip}`, req.body.device);
+    const ip = req.params.ip;
+    const device: IDevice = req.body.device;
+
+    const webhook = await Promise.all([
+        shellyActivateWebhook(ip, device, "on"),
+        shellyActivateWebhook(ip, device, "off")
+    ]);
+
+    logger.info(`[server]: Webhook activation response for ${ip}: ${JSON.stringify(webhook)}`);
+    if (webhook && webhook.length === 2) {
+        await shellyReboot(ip);
+
+        if (device) {
+            device.webhooks = await shellyWebhookList(device.ip) || undefined;
+            mqttClient.status(device.device);
+        }
+    } else {
+        res.status(404).send("Shelly device not found");
+    }
+
+    res.send(device);
 });

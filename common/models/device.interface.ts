@@ -12,6 +12,7 @@ export interface IDevice {
     webhooks?: Webhooks;
     switchStatus: ShellySwitch;
     device: Device;
+    src?: string;
 }
 
 export interface DeviceList {

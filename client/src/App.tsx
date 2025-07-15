@@ -1,13 +1,14 @@
-import './App.css'
-import ShellyScanner from './components/shelly-scanner/ShellyScanner'
+import "./App.css";
+import IpAddressSetter from "./components/ip-address/IpAddressSetter";
+import ShellyScanner from "./components/shelly-scanner/ShellyScanner";
 
 function App() {
-
-  return (
-    <>
-      <ShellyScanner />
-    </>
-  )
+    return (
+        <>
+            <IpAddressSetter />
+            <ShellyScanner />
+        </>
+    );
 }
 
-export default App
+export default App;

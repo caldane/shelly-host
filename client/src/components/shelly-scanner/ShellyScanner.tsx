@@ -4,6 +4,8 @@ import ProgressBar from "../progress-bar/ProgressBar";
 import { BACKEND_URL } from "../../constants/env";
 import ShellyEntity from "../shelly-entity/ShellyEntity";
 import { IDevice } from "../../../../common/models/device.interface";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const ShellyScanner = () => {
     const [progress, setProgress] = useState(0);
@@ -11,6 +13,8 @@ const ShellyScanner = () => {
     const [count, setCount] = useState(0);
     const [devices, setDevices] = useState<IDevice[]>([]);
     const [mode, setMode] = useState<string>("dev");
+
+    const ipAddress = useSelector((state: RootState) => state.scanner.ipAddress);
 
     useEffect(() => {
         const handleKeyPress = (() => {
@@ -49,7 +53,15 @@ const ShellyScanner = () => {
     }, []);
 
     useEffect(() => {
-        const eventSource = new EventSource(`${BACKEND_URL}/shelly/discover`);
+        if (!ipAddress) {
+            console.warn("No IP address provided for Shelly scanner.");
+            return;
+        } else {
+            console.log(`Starting Shelly scan on IP: ${ipAddress}`);
+            setProgress(0);
+        }
+        
+        const eventSource = new EventSource(`${BACKEND_URL}/shelly/discover?ip=${ipAddress}`);
 
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -72,7 +84,7 @@ const ShellyScanner = () => {
         return () => {
             eventSource.close();
         };
-    }, [total]);
+    }, [total, ipAddress]);
 
     useEffect(() => {
         const eventSource = new EventSource(`${BACKEND_URL}/shelly/listen`);

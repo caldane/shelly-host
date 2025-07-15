@@ -7,6 +7,7 @@ import { MqttResult } from "../../../common/models/mqtt.interface";
 import { ShellyStatus, ShellyStatusResult } from "../../../common/models/shelly.interface";
 import { createMqttConfig } from "./mqtt.helper";
 import { Webhooks } from "../../../common/models/webhooks.interface";
+import { createWebhookConfig } from "./webhook.helper";
 
 
 export const discoverShelly = async (ip: string): Promise<ShellyStatusResult | null> => {
@@ -29,7 +30,7 @@ export const discoverShelly = async (ip: string): Promise<ShellyStatusResult | n
             },
             options.body
         );
-        return  postResponse.result;
+        return postResponse.result;
     } catch (error: Error | any) {
         logger.info(`[server]: Failed to discover device at ${ip}. Error: ${error.message}`);
     }
@@ -83,7 +84,7 @@ export const composeShellyDevice = async (
     let response: IDevice | null = null;
     try {
         const device = await discoverShelly(ip);
-        if(device === null) {
+        if (device === null) {
             logger.info(`[server]: Device at ${ip} is not reachable.`);
             return null;
         }
@@ -111,7 +112,8 @@ export const composeShellyDevice = async (
 };
 
 
-export const shellyActivateMqtt = async (ip: string, device: any): Promise<any> => {
+export const shellyActivateMqtt = async (ip: string, device: any): Promise<IDevice | null> => {
+    logger.info(`[server]: Activating MQTT for device with IP: ${ip}`, device);
     const mqttConfig: MqttResult = createMqttConfig(device.name, device.room);
     const options = {
         body: {
@@ -226,6 +228,41 @@ export const shellyWebhookList = async (ip: string): Promise<Webhooks | null> =>
         return { ...postResponse, ip: ip };
     } catch (error: Error | any) {
         logger.info(`[server]: Failed to get webhook list for device at ${ip}. Error: ${error.message}`);
+    }
+
+    return null;
+}
+
+export const shellyActivateWebhook = async (ip: string, device: IDevice, mode: "on" | "off"): Promise<any> => {
+    if(!device || !device.room || !device.room.id || !device.device || !device.device.id) {
+        logger.error(`[server]: Invalid device or room information for IP: ${ip}`);
+        return null;
+    }
+
+    const roomId = device.room.id;
+    const options = {
+        body: {
+            id: 0,
+            method: device.webhooks ? "Webhook.Update" : "Webhook.Create",
+            params: createWebhookConfig(device.name, roomId, device.device.id.toString(), mode),
+        },
+    };
+
+    try {
+        const postResponse = await postRequest<{}>(
+            `http://${ip}/rpc/`,
+            {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(JSON.stringify(options.body)),
+                Accept: "application/json",
+                "User-Agent": "ShellyApp/1.0",
+                Connection: "keep-alive",
+            },
+            options.body
+        );
+        return { ip: ip, ...postResponse };
+    } catch (error: Error | any) {
+        logger.info(`[server]: Failed to activate webhook on device at ${ip}. Error: ${error.message}`);
     }
 
     return null;

@@ -85,7 +85,6 @@ services:
       SHELLY_CLOUD_AUTH_KEY: "$SHELLY_CLOUD_AUTH_KEY"
       VHOST_PREFIX: "$VHOST_PREFIX"
     volumes:
-      - ./server:/app/server
       - shared_common:/app/common:ro
     depends_on:
       common:
@@ -108,6 +107,7 @@ services:
   client:
     image: registry.caldane.net/shelly-host-client:latest
     container_name: shelly-client
+    entrypoint: ["/entrypoint.sh"]
     environment:
       VITE_APP_BACKEND: "$VITE_APP_BACKEND"
       VITE_APP_NAME: "$VITE_APP_NAME"

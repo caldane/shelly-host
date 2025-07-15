@@ -90,6 +90,7 @@ client.on("message", (topic, message) => {
 
                 const device: IDevice = createIDevice(deviceList.data.devices[deviceId]);
                 device.switchStatus.output = statusResponse.result.output;
+                device.src = statusResponse.src;
                 listener(device);
             } catch (error) {
                 logger.error(`[server]: Failed to parse MQTT message: ${error}`);
@@ -109,6 +110,21 @@ export const mqtt = {
         logger.info(`[server]: Client ${clientName} published message "${message}" to channel "${channel}"`);
     },
     status: (device: Device) => {
+        if(!device || !device.room_id) {
+            logger.error(`[server]: Device or room_id is missing for device: ${device ? device.name : "Unknown"}`);
+            return;
+        }
+
+        if (!roomList.data.rooms) {
+            logger.error(`[server]: Room list is not available.`);
+            return;
+        }
+
+        if (!device.name || !device.ip) {
+            logger.error(`[server]: Device name or IP is missing for device: ${device ? device.name : "Unknown"}`);
+            return;
+        }
+
         const roomKey = device.room_id.toString() as keyof typeof roomList.data.rooms;
         const room: Room = roomList.data.rooms[roomKey];
         const mqttConfig = createMqttConfig(device.name, room);
