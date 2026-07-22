@@ -4,17 +4,17 @@ import ProgressBar from "../progress-bar/ProgressBar";
 import { BACKEND_URL } from "../../constants/env";
 import ShellyEntity from "../shelly-entity/ShellyEntity";
 import { IDevice } from "../../../../common/models/device.interface";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 
-const ShellyScanner = () => {
+type ShellyScannerProps = {
+    ipAddress: string;
+};
+
+const ShellyScanner = ({ ipAddress }: ShellyScannerProps) => {
     const [progress, setProgress] = useState(0);
-    const [total, setTotal] = useState(null);
+    const [total, setTotal] = useState<number | null>(null);
     const [count, setCount] = useState(0);
     const [devices, setDevices] = useState<IDevice[]>([]);
     const [mode, setMode] = useState<string>("dev");
-
-    const ipAddress = useSelector((state: RootState) => state.scanner.ipAddress);
 
     useEffect(() => {
         const handleKeyPress = (() => {
@@ -53,26 +53,30 @@ const ShellyScanner = () => {
     }, []);
 
     useEffect(() => {
-        if (!ipAddress) {
+        const trimmedIp = ipAddress.trim();
+        if (!trimmedIp) {
             console.warn("No IP address provided for Shelly scanner.");
             return;
-        } else {
-            console.log(`Starting Shelly scan on IP: ${ipAddress}`);
-            setProgress(0);
         }
-        
-        const eventSource = new EventSource(`${BACKEND_URL}/shelly/discover?ip=${ipAddress}`);
+
+        console.log(`Starting Shelly scan on IP: ${trimmedIp}`);
+        setProgress(0);
+        setCount(0);
+        setTotal(null);
+        setDevices([]);
+
+        const eventSource = new EventSource(`${BACKEND_URL}/shelly/discover?ip=${encodeURIComponent(trimmedIp)}`);
 
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.total && total === null) {
+            if (typeof data.total === "number") {
                 setTotal(data.total);
             }
-            if (data.count) {
+            if (typeof data.count === "number") {
                 setCount(data.count);
             }
-            if (data.completed && total) {
-                setProgress((data.completed / total) * 100);
+            if (typeof data.completed === "number" && typeof data.total === "number" && data.total > 0) {
+                setProgress((data.completed / data.total) * 100);
             }
             if (data.message === "Scan complete") {
                 setDevices(data.devices);
@@ -84,7 +88,7 @@ const ShellyScanner = () => {
         return () => {
             eventSource.close();
         };
-    }, [total, ipAddress]);
+    }, [ipAddress]);
 
     useEffect(() => {
         const eventSource = new EventSource(`${BACKEND_URL}/shelly/listen`);
@@ -92,15 +96,14 @@ const ShellyScanner = () => {
         eventSource.onmessage = (event) => {
             const data: IDevice = JSON.parse(event.data);
             if (data.ip) {
-                const newDeviceStates = devices.map((device) => (device.ip === data.ip ? data : device));
-                setDevices(newDeviceStates);
+                setDevices((currentDevices) => currentDevices.map((device) => (device.ip === data.ip ? data : device)));
             }
         };
 
         return () => {
             eventSource.close();
         };
-    }, [devices]);
+    }, []);
 
     return (
         <section className={style["shelly-scanner"]}>

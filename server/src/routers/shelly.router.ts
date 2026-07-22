@@ -9,6 +9,7 @@ import { composeShellyDevice, shellyActivateMqtt, shellyActivateWebhook, shellyG
 import { MqttResponse } from "../../../common/models/mqtt.interface";
 import { DeviceList, IDevice } from "../../../common/models/device.interface";
 import { mqttAddListener, mqtt as mqttClient } from "../utils/mqtt.helper";
+import { getConfigData, getDeviceListData, getIpAddresses, getRoomListData } from "../utils/data-store.helper";
 
 export const shellyRouter = Router();
 
@@ -34,6 +35,24 @@ function getLocalIpAddress() {
     return localIpAddress;
 }
 
+function getIpPrefix(ipAddress: string | undefined | null): string | null {
+    if (!ipAddress) {
+        return null;
+    }
+
+    const octets = ipAddress.split(".");
+    if (octets.length !== 4) {
+        return null;
+    }
+
+    const firstThree = octets.slice(0, 3).map((segment) => Number(segment));
+    if (firstThree.some((segment) => Number.isNaN(segment) || segment < 0 || segment > 255)) {
+        return null;
+    }
+
+    return `${firstThree[0]}.${firstThree[1]}.${firstThree[2]}`;
+}
+
 const localIpAddress = getLocalIpAddress();
 
 if (!localIpAddress) {
@@ -55,20 +74,39 @@ shellyRouter.get("/discover", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
-    const ipAddress: string | null = req.query.ip?.toString() || localIpAddress;
+    const config = getConfigData();
+    const roomList = getRoomListData();
+    const deviceList = getDeviceListData() as DeviceList;
+    const requestedIpAddress = req.query.ip?.toString();
 
-    if (!ipAddress) {
+    const configuredPrefixes = getIpAddresses()
+        .map((ipAddress) => getIpPrefix(ipAddress))
+        .filter((ipAddress): ipAddress is string => !!ipAddress);
+    const localIpPrefix = getIpPrefix(localIpAddress);
+    const requestedIpPrefix = getIpPrefix(requestedIpAddress);
+
+    const prefixes = requestedIpPrefix
+        ? [requestedIpPrefix]
+        : (configuredPrefixes.length > 0 ? configuredPrefixes : (localIpPrefix ? [localIpPrefix] : []));
+
+    if (prefixes.length === 0) {
         res.status(404).send("Cannot discover devices when not on a network.");
         return;
     }
-    const [net1, net2, net3] = ipAddress.split(".");
+
+    const discoverConfig = config.discover?.dhcp;
+    const discoverStart = Number(discoverConfig?.start ?? 40);
+    const discoverEnd = Number(discoverConfig?.end ?? 220);
+    const start = Number.isNaN(discoverStart) ? 40 : discoverStart;
+    const end = Number.isNaN(discoverEnd) ? 220 : discoverEnd;
+
     // const shellyRooms = await shellyCloudRooms();
     // await new Promise((resolve) => setTimeout(resolve, 5000)); // Adding a delay to ensure the cloud rooms are fetched before discovering devices
     // const shellyDevices = await shellyCloudDevices();
     const shellyRooms = roomList;
-    const shellyDevices: DeviceList = deviceList;
+    const shellyDevices = deviceList;
     const discoveredDevices: Promise<IDevice | null>[] = []; // Array to hold discovered devices for logging
-    const counts = { successfulResponses: 0, completedRequests: 0, totalIPs: config.discover.dhcp.end - config.discover.dhcp.start };
+    const counts = { successfulResponses: 0, completedRequests: 0, totalIPs: prefixes.length * Math.max(0, end - start) };
 
     const requestComplete = (ip: string) => {
         counts.completedRequests++;
@@ -79,9 +117,11 @@ shellyRouter.get("/discover", async (req: Request, res: Response) => {
         counts.successfulResponses++;
     };
 
-    for (let net4 = config.discover.dhcp.start; net4 < config.discover.dhcp.end; net4++) {
-        const ip = `${net1}.${net2}.${net3}.${net4}`;
-        discoveredDevices.push(composeShellyDevice(ip, shellyRooms, shellyDevices, requestComplete, discoverSuccess));
+    for (const prefix of prefixes) {
+        for (let net4 = start; net4 < end; net4++) {
+            const ip = `${prefix}.${net4}`;
+            discoveredDevices.push(composeShellyDevice(ip, shellyRooms, shellyDevices, requestComplete, discoverSuccess));
+        }
     }
 
     const foundDevices = (await Promise.all(discoveredDevices)).filter((device) => device !== null && device !== undefined);

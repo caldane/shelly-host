@@ -1,7 +1,7 @@
 import { logger } from "../logger";
-import sites from "../assets/json/site.json"
 import { Room, Site } from "../../../common/models/sites.interface";
 import { mqtt } from "./mqtt.helper";
+import { getSiteData } from "./data-store.helper";
 
 export const channelDictionary = {
   "downstairs": "shellyplus1-bighouse/command/switch:0",
@@ -22,6 +22,7 @@ export const channelDictionary = {
 } as const;
 
 const getRoom = (siteName: string, roomName: string) => {
+  const sites = getSiteData();
   if (siteName as keyof typeof sites === undefined) {
     logger.info(`[server]: Site [${siteName}] not configured`);
     throw new Error(`Site [${siteName}] not configured`);

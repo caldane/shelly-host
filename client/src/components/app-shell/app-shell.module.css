@@ -1,0 +1,68 @@
+section.app-shell {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #1b1f24;
+
+  > header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.3rem;
+    align-items: center;
+    padding: 1.3rem 2.1rem;
+    border-bottom: 1px solid #d6dde8;
+    background: linear-gradient(130deg, #fff2de, #dff0ff);
+
+    > h1 {
+      margin: 0;
+      font-size: 2.1rem;
+      letter-spacing: 0.03rem;
+      color: #203254;
+    }
+
+    > nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+
+      > a {
+        text-decoration: none;
+        color: #204366;
+        font-weight: 600;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+
+        &[aria-current="page"] {
+          background: #204366;
+          color: #f4f9ff;
+        }
+
+        &:hover {
+          background: #7ca3c933;
+        }
+      }
+    }
+  }
+
+  > article {
+    padding: 1.3rem 2.1rem 2.1rem;
+    width: min(89rem, 100%);
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 55rem) {
+  section.app-shell {
+    > header {
+      padding: 1rem 1.3rem;
+    }
+
+    > article {
+      padding: 1rem 1.3rem 1.3rem;
+    }
+  }
+}

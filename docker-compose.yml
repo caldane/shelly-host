@@ -33,6 +33,20 @@ services:
       timeout: 5s
       retries: 5
 
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   loki:
     image: grafana/loki:2.9.2
@@ -84,6 +98,8 @@ services:
       CLIENT_URL: "$CLIENT_URL"
       SHELLY_CLOUD_AUTH_KEY: "$SHELLY_CLOUD_AUTH_KEY"
       VHOST_PREFIX: "$VHOST_PREFIX"
+      MONGO_URL: "${MONGO_URL:-mongodb://mongo:27017}"
+      MONGO_DB_NAME: "${MONGO_DB_NAME:-shelly_host}"
     volumes:
       - shared_common:/app/common:ro
     depends_on:
@@ -92,6 +108,8 @@ services:
       mqtt:
         condition: service_healthy
       postgres:
+        condition: service_healthy
+      mongo:
         condition: service_healthy
       loki:
         condition: service_healthy
@@ -122,5 +140,6 @@ volumes:
   mosquitto_data:
   mosquitto_config:
   postgres_data:
+  mongo_data:
   loki_data:
   shared_common:

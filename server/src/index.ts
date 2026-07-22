@@ -5,6 +5,7 @@ import expressWinston from "express-winston";
 import { logEnv, logger } from "./logger";
 
 import { init } from "./utils/server.helper";
+import { initializeDataStore } from "./utils/data-store.helper";
 
 
 
@@ -12,24 +13,33 @@ logger.info(`[server]: Environment: ${process.env.NODE_ENV}`, { PORT: process.en
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
-init(app);
 
-app.use(
-    expressWinston.logger({
-        winstonInstance: logger,
-        statusLevels: true,
-    })
-);
+const startServer = async () => {
+    await initializeDataStore();
+    init(app);
 
-app.get("/", (_: Request, res: Response) => {
-    logEnv();
-    res.send("<h1>MQTT Server</h1><p>Use /channel/:channel/message/:message/:clientName to send a message to a channel</p>");
-});
+    app.use(
+        expressWinston.logger({
+            winstonInstance: logger,
+            statusLevels: true,
+        })
+    );
 
-app.get("/health", (_: Request, res: Response) => {
-    res.status(200).send("Healthy");
-});
+    app.get("/", (_: Request, res: Response) => {
+        logEnv();
+        res.send("<h1>MQTT Server</h1><p>Use /channel/:channel/message/:message/:clientName to send a message to a channel</p>");
+    });
 
-app.listen(port, () => {
-    logger.info(`[server]: Web Server is running at http://localhost:${port}`);
+    app.get("/health", (_: Request, res: Response) => {
+        res.status(200).send("Healthy");
+    });
+
+    app.listen(port, () => {
+        logger.info(`[server]: Web Server is running at http://localhost:${port}`);
+    });
+};
+
+startServer().catch((error) => {
+    logger.error(`[server]: Failed to start server: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
 });

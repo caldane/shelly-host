@@ -1,0 +1,70 @@
+section.switches-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  text-align: left;
+
+  > header {
+    > h2 {
+      margin: 0;
+      color: #1a365b;
+      font-size: 2.1rem;
+    }
+
+    > p {
+      margin: 0.3rem 0 0;
+      color: #475c76;
+    }
+  }
+
+  > article {
+    display: grid;
+    gap: 0.8rem;
+
+    > ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 0.8rem;
+
+      > li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: #f8fbff;
+        border: 1px solid #d4e2ef;
+        border-radius: 0.8rem;
+        padding: 0.8rem;
+
+        > h3 {
+          margin: 0;
+          color: #21476f;
+          font-size: 1rem;
+        }
+
+        > p {
+          margin: 0;
+          color: #375574;
+        }
+
+        > aside {
+          > button {
+            border: none;
+            background: #2d639a;
+            color: #f8fbff;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.5rem;
+          }
+        }
+      }
+    }
+
+    > p {
+      margin: 0;
+      color: #2f5379;
+      font-weight: 600;
+    }
+  }
+}

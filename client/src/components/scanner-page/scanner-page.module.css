@@ -1,0 +1,60 @@
+section.scanner-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  text-align: left;
+
+  > header {
+    > h2 {
+      margin: 0;
+      font-size: 2.1rem;
+      color: #17375d;
+    }
+
+    > p {
+      margin: 0.3rem 0 0;
+      color: #445671;
+    }
+  }
+
+  > article {
+    display: grid;
+    gap: 0.5rem;
+    background: #f7fbff;
+    border: 1px solid #d4e2f0;
+    border-radius: 0.8rem;
+    padding: 1rem;
+
+    > label {
+      font-weight: 600;
+      color: #26486d;
+    }
+
+    > input {
+      width: min(34rem, 100%);
+      padding: 0.5rem 0.8rem;
+      border: 1px solid #bfd0e2;
+      border-radius: 0.5rem;
+    }
+
+    > p {
+      margin: 0;
+      color: #355476;
+      font-weight: 600;
+    }
+
+    > aside {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      > button {
+        border: none;
+        color: #f8fbff;
+        background: #2c5f94;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+}

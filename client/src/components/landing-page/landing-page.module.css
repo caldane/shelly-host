@@ -1,0 +1,60 @@
+section.landing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+
+  > header {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    > h2 {
+      margin: 0;
+      font-size: 2.1rem;
+      color: #1a3557;
+    }
+
+    > p {
+      margin: 0;
+      color: #344862;
+      font-size: 1rem;
+    }
+  }
+
+  > article {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+
+    > section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      background: linear-gradient(160deg, #f7fbff, #fdf8f3);
+      border: 1px solid #d8e3f0;
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: 0 0.3rem 1rem #2b3a4f1a;
+
+      > h3 {
+        margin: 0;
+        color: #153a63;
+      }
+
+      > p {
+        margin: 0;
+        color: #4d5e74;
+      }
+
+      > a {
+        text-decoration: none;
+        width: fit-content;
+        color: #f7fbff;
+        background: #2a5d91;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+}

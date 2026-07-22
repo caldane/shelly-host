@@ -1,0 +1,111 @@
+section.configuration-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  text-align: left;
+
+  > header {
+    > h2 {
+      margin: 0;
+      color: #17345b;
+      font-size: 2.1rem;
+    }
+
+    > p {
+      margin: 0.3rem 0 0;
+      color: #42546d;
+    }
+  }
+
+  > article {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    background: #f8fbff;
+    border: 1px solid #d8e3ef;
+    border-radius: 0.8rem;
+    padding: 1rem;
+
+    > form {
+      display: grid;
+      gap: 0.5rem;
+
+      > label {
+        font-weight: 600;
+        color: #204366;
+      }
+
+      > input {
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid #bfcee0;
+      }
+
+      > button {
+        width: fit-content;
+        border: none;
+        color: #f8fbff;
+        background: #2b5d92;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+      }
+    }
+
+    > aside {
+      display: grid;
+      gap: 0.5rem;
+
+      > p {
+        margin: 0;
+        color: #365477;
+      }
+
+      > label {
+        font-weight: 600;
+      }
+
+      > input {
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid #bfcee0;
+      }
+    }
+
+    > ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.8rem;
+
+      > li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+        border: 1px solid #d2dfed;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.8rem;
+
+        > span {
+          font-weight: 600;
+          color: #1d3f68;
+        }
+
+        > button {
+          border: none;
+          background: #8e2d2d;
+          color: #fff4f4;
+          padding: 0.3rem 0.5rem;
+          border-radius: 0.3rem;
+        }
+      }
+    }
+
+    > p {
+      margin: 0;
+      color: #2f4f76;
+      font-weight: 600;
+    }
+  }
+}

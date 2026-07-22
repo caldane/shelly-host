@@ -16,6 +16,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-winston": "^4.2.0",
+    "mongodb": "^7.5.0",
     "mqtt": "^5.7.0",
     "winston": "^3.13.0",
     "winston-loki": "^6.1.3"
